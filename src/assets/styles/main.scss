@@ -1,0 +1,14 @@
+@use "vendors";
+@use "fonts";
+@use "variables" as *;
+
+@use "blocks/page";
+
+:root {
+  font-family: $base-font-family;
+  font-size: $base-font-size;
+}
+
+* {
+  user-select: none;
+}

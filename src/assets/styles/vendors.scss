@@ -1,0 +1,8 @@
+@use "bulma/sass/utilities" with (
+  $family-primary: "'Nunito Sans', sans-serif",
+);
+
+@use "bulma/sass/base";
+@use "bulma/sass/themes";
+@use "bulma/sass/elements/button";
+@use "bulma/sass/components/navbar";

@@ -1,5 +1,13 @@
-# Vue 3 + TypeScript + Vite
+# W2W Test project
+- Vue 3 + defineModel
+- Pinia
+- VueRouter
+- Custom EventBus
+- Bulma on CSS
+- Fake Axios requests
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## Opening
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+1. yarn
+2. yarn dev
+3. http://localhost:5173 in browser

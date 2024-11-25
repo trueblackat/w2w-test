@@ -1,21 +1,19 @@
 <script setup lang="ts">
 import {Doctor, Institution, Nurse, Post} from "@/types/Users.ts";
-import {computed, reactive, ref, toRaw, watch} from "vue";
+import {computed, onMounted, reactive, ref, toRaw, watch} from "vue";
 import generateId from "@/utils/generateId.ts";
 import {getInstituteTranslate, getPostTranslate} from "@/utils/users.ts";
 import {useUsersStore} from "@/stores/users.ts";
 import {storeToRefs} from "pinia";
+import eventBus from "@/services/EventBus.ts";
 
 const usersStore = useUsersStore();
-const { doctors, nurses, activeUser, cantAddNewHeadOfCardio, cantAddNewHeadOfSurgery } = storeToRefs(usersStore);
+const {addUser, editUser} = usersStore;
+const { activeUser } = storeToRefs(usersStore);
 
 const isVisible = defineModel();
 
 const hiddenSubmit = ref<HTMLButtonElement>();
-const close = () => {
-  isVisible.value = false;
-  activeUser.value = null;
-}
 const save = () => {
   hiddenSubmit.value?.click(); // for default validation
 }
@@ -49,27 +47,48 @@ const isEditMode = computed(() => !!activeUser.value);
 const isCreateMode = computed(() => !isEditMode.value);
 
 const user = reactive<Doctor | Nurse>({
-  name: isEditMode.value ? activeUser.value.name : '',
-  post: isEditMode.value ? activeUser.value.post : '',
-  institution: isEditMode.value ? activeUser.value.institution : '',
-  isHeadOfInstitution: isEditMode.value ? activeUser.value.isHeadOfInstitution : false,
+  name: '',
+  post: '',
+  institution: '',
+  isHeadOfInstitution: false,
 });
+const initUser = () => {
+  user.id = isEditMode.value ? activeUser.value?.id : generateId();
+  user.name = isEditMode.value ? activeUser.value?.name : '';
+  user.post = isEditMode.value ? activeUser.value?.post : '';
+  user.institution = isEditMode.value ? activeUser.value?.institution : '';
+  user.isHeadOfInstitution = isEditMode.value ? activeUser.value?.isHeadOfInstitution : false;
+}
 
 const onSubmit = () => {
   if (isEditMode.value) {
-    console.log('edit')
+    editUser(structuredClone(toRaw(user)));
   } else {
-    user.id = generateId();
-
-    if (user.post === 'doctor') {
-      doctors.value.push(structuredClone(toRaw(user)));
-    } else {
-      nurses.value.push(structuredClone(toRaw(user)));
-    }
-
-    close();
+    addUser(structuredClone(toRaw(user)));
   }
+
+  close();
 }
+
+const close = () => {
+  isVisible.value = false;
+  activeUser.value = null;
+
+  delete user.id;
+  user.name = '';
+  user.post = '';
+  user.institution = '';
+  user.isHeadOfInstitution = false;
+}
+
+onMounted(() => {
+  initUser();
+
+  eventBus.on('openUserDetailsModal', () => {
+    isVisible.value = true;
+    initUser();
+  });
+})
 
 watch(
   () => user,
@@ -137,9 +156,6 @@ watch(
             <input
               type="checkbox"
               v-model="user.isHeadOfInstitution"
-              :disabled="!user.institution
-                || cantAddNewHeadOfCardio && user.institution === 'cardio'
-                || cantAddNewHeadOfSurgery && user.institution === 'surgery'"
             />
 
             Глава отделения

@@ -1,6 +1,6 @@
 import {Doctor, Nurse} from "../types/Users.ts";
 
-export const doctors: Doctor[] = [
+const doctors: Doctor[] = [
   {
     id: '1',
     name: 'Дядькина Дарья Николаевна',
@@ -17,11 +17,16 @@ export const doctors: Doctor[] = [
   }
 ];
 
-export const nurses: Nurse[] = [
+const nurses: Nurse[] = [
   {
     id: '3',
     name: 'Иванов Иван Иванович',
     institution: "surgery",
     post: 'nurse',
   }
+];
+
+export default [
+  ...doctors,
+  ...nurses
 ];

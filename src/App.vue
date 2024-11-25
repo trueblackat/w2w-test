@@ -5,11 +5,10 @@ import {useUsersStore} from "@/stores/users.ts";
 import TheFooter from "@/components/TheFooter.vue";
 
 const usersStore = useUsersStore();
-const { getDoctors, getNurses } = usersStore;
+const { getUsers } = usersStore;
 
 onMounted(() => {
-  getDoctors();
-  getNurses();
+  getUsers();
 })
 </script>
 

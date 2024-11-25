@@ -1,57 +1,37 @@
 import {defineStore} from "pinia";
-import {Doctor, Nurse} from "../types/Users.ts";
+import {Doctor, Nurse, User} from "../types/Users.ts";
 import {computed, ref} from "vue";
 import api from "../services/api";
 
 export const useUsersStore = defineStore('users', () => {
-  const isLoading = ref({
-    doctors: false,
-    nurses: false
-  });
-  const doctors = ref<Doctor[]>([]);
-  const nurses = ref<Nurse[]>([]);
+  const isLoading = ref(false);
+  const users = ref<User[]>([]);
+  const doctors = computed<Doctor[]>(() => users.value.filter(user => user.post === 'doctor') as Doctor[]);
+  const nurses = computed<Nurse[]>(() => users.value.filter(user => user.post === 'nurse') as Nurse[]);
   const activeUser = ref<Doctor | Nurse | null>(null);
 
-  const cantAddNewHeadOfCardio = computed(
-    () => doctors.value
-      .filter(({institution}) => institution === 'cardio')
-      .some(({isHeadOfInstitution}) => isHeadOfInstitution));
-
-  const cantAddNewHeadOfSurgery = computed(
-    () => doctors.value
-      .filter(({institution}) => institution === 'surgery')
-      .some(({isHeadOfInstitution}) => isHeadOfInstitution));
-
-  const getDoctors = async () => {
+  const getUsers = async () => {
     try {
-      isLoading.value.doctors = true;
+      isLoading.value = true;
 
-      doctors.value = await api.users.getDoctors();
+      users.value = await api.users.getUsers();
     } catch (e) {
       console.error(e);
     } finally {
-      isLoading.value.doctors = false;
+      isLoading.value = false;
     }
   }
 
-  const getNurses = async () => {
-    try {
-      isLoading.value.nurses = true;
+  const addUser = (user: Doctor | Nurse) => {
+    users.value = [...users.value, user];
+  }
 
-      nurses.value = await api.users.getNurses();
-    } catch (e) {
-      console.error(e);
-    } finally {
-      isLoading.value.nurses = false;
-    }
+  const editUser = (user: Doctor | Nurse) => {
+    users.value = users.value.map(u => u.id === user.id ? user : u);
   }
 
   const removeUser = (user: Doctor | Nurse) => {
-    if (user.post === 'doctor') {
-      doctors.value = doctors.value.filter(({id}) => id !== user.id);
-    } else {
-      nurses.value = nurses.value.filter(({id}) => id !== user.id);
-    }
+    users.value = users.value.filter(({id}) => id !== user.id);
   }
 
   return {
@@ -60,11 +40,9 @@ export const useUsersStore = defineStore('users', () => {
     nurses,
     activeUser,
 
-    cantAddNewHeadOfCardio,
-    cantAddNewHeadOfSurgery,
-
-    getDoctors,
-    getNurses,
+    getUsers,
+    addUser,
     removeUser,
+    editUser,
   };
 })

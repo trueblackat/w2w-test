@@ -1,9 +1,8 @@
-import {getDoctors, getNurses} from './Users';
+import {getUsers} from './Users';
 
 const api = {
   users: {
-    getDoctors,
-    getNurses,
+    getUsers
   }
 }
 

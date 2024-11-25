@@ -2,7 +2,6 @@
 import {RouteRecordRaw} from "vue-router";
 import {useUsersStore} from "@/stores/users.js";
 import {storeToRefs} from "pinia";
-import {computed} from "vue";
 
 const usersStore = useUsersStore();
 const { isLoading } = storeToRefs(usersStore);
@@ -10,21 +9,18 @@ const { isLoading } = storeToRefs(usersStore);
 interface Link {
   label: string;
   to: RouteRecordRaw['name'];
-  isLoading: boolean;
 }
 
-const links = computed<Link[]>(() => ([
+const links: Link[] = [
   {
     label: 'Врачи',
     to: 'Doctors',
-    isLoading: isLoading.value.doctors,
   },
   {
     label: 'Медсестры',
     to: 'Nurses',
-    isLoading: isLoading.value.nurses,
   },
-]));
+];
 </script>
 
 <template>
@@ -35,10 +31,10 @@ const links = computed<Link[]>(() => ([
       :class="[
         'button is-link',
         {
-          'is-loading': link.isLoading,
+          'is-loading': isLoading,
         }
       ]"
-      :active-class="!link.isLoading ? 'is-inverted' : ''"
+      :active-class="!isLoading ? 'is-inverted' : ''"
       :to="{ name: link.to }"
     >
       {{ link.label }}

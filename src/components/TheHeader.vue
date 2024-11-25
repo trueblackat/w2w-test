@@ -1,21 +1,30 @@
 <script setup lang="ts">
-import {RouteRecordRaw, useRoute} from "vue-router";
-const route = useRoute();
+import {RouteRecordRaw} from "vue-router";
+import {useUsersStore} from "@/stores/users.js";
+import {storeToRefs} from "pinia";
+import {computed} from "vue";
+
+const usersStore = useUsersStore();
+const { isLoading } = storeToRefs(usersStore);
 
 interface Link {
   label: string;
   to: RouteRecordRaw['name'];
+  isLoading: boolean;
 }
-const links: Link[] = [
+
+const links = computed<Link[]>(() => ([
   {
-    label: 'Доктора',
+    label: 'Врачи',
     to: 'Doctors',
+    isLoading: isLoading.value.doctors,
   },
   {
     label: 'Медсестры',
     to: 'Nurses',
+    isLoading: isLoading.value.nurses,
   },
-]
+]));
 </script>
 
 <template>
@@ -23,8 +32,13 @@ const links: Link[] = [
     <RouterLink
       v-for="link in links"
       :key="link.to"
-      class="button is-link"
-      active-class="is-inverted"
+      :class="[
+        'button is-link',
+        {
+          'is-loading': link.isLoading,
+        }
+      ]"
+      :active-class="!link.isLoading ? 'is-inverted' : ''"
       :to="{ name: link.to }"
     >
       {{ link.label }}

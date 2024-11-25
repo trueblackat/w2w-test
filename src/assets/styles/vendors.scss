@@ -4,5 +4,15 @@
 
 @use "bulma/sass/base";
 @use "bulma/sass/themes";
-@use "bulma/sass/elements/button";
+
+@use "bulma/sass/components/modal";
 @use "bulma/sass/components/navbar";
+
+@use "bulma/sass/elements/button";
+@use "bulma/sass/elements/table";
+@use "bulma/sass/elements/progress";
+@use "bulma/sass/elements/delete";
+
+@use "bulma/sass/form/input-textarea";
+@use "bulma/sass/form/select";
+@use "bulma/sass/form/checkbox-radio";

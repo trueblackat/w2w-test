@@ -1,24 +1,27 @@
-import {Doctor, Institution, Nurse} from "../types/Users.ts";
+import {Doctor, Nurse} from "../types/Users.ts";
 
 export const doctors: Doctor[] = [
   {
-    id: 1,
+    id: '1',
     name: 'Дядькина Дарья Николаевна',
-    institution: Institution.cardio,
+    institution: 'cardio',
     isHeadOfInstitution: true,
+    post: 'doctor',
   },
   {
-    id: 2,
+    id: '2',
     name: 'Смирнов Сергей Петрович',
-    institution: Institution.cardio,
+    institution: 'cardio',
     isHeadOfInstitution: false,
+    post: 'doctor',
   }
 ];
 
 export const nurses: Nurse[] = [
   {
-    id: 3,
+    id: '3',
     name: 'Иванов Иван Иванович',
-    institution: Institution.surgery,
+    institution: "surgery",
+    post: 'nurse',
   }
 ];
